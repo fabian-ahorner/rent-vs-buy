@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/rent_vs_buy/static/css/main.d1b05096.chunk.css",
+    "main.js": "/rent_vs_buy/static/js/main.512b26e8.chunk.js",
+    "main.js.map": "/rent_vs_buy/static/js/main.512b26e8.chunk.js.map",
+    "runtime-main.js": "/rent_vs_buy/static/js/runtime-main.aa311118.js",
+    "runtime-main.js.map": "/rent_vs_buy/static/js/runtime-main.aa311118.js.map",
+    "static/js/2.d6e05042.chunk.js": "/rent_vs_buy/static/js/2.d6e05042.chunk.js",
+    "static/js/2.d6e05042.chunk.js.map": "/rent_vs_buy/static/js/2.d6e05042.chunk.js.map",
+    "index.html": "/rent_vs_buy/index.html",
+    "precache-manifest.27514906e775fd1caf24d157244aa89b.js": "/rent_vs_buy/precache-manifest.27514906e775fd1caf24d157244aa89b.js",
+    "service-worker.js": "/rent_vs_buy/service-worker.js",
+    "static/css/main.d1b05096.chunk.css.map": "/rent_vs_buy/static/css/main.d1b05096.chunk.css.map",
+    "static/js/2.d6e05042.chunk.js.LICENSE": "/rent_vs_buy/static/js/2.d6e05042.chunk.js.LICENSE"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.aa311118.js",
+    "static/js/2.d6e05042.chunk.js",
+    "static/css/main.d1b05096.chunk.css",
+    "static/js/main.512b26e8.chunk.js"
+  ]
+}

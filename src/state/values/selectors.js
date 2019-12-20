@@ -18,9 +18,9 @@ export const getYears = createSelector(
 const createSelectors = (...keys) => keys.map(key => getValue(key))
 
 export const getMonthlyMortgagePayment = createSelector(
-  createSelectors('mortgageAmount', 'mortgageDeposit', 'mortgageYears', 'mortgageInterest'),
-  (mortgage, deposit, mortgageYears, interest) => {
-    const principal = mortgage - deposit
+  createSelectors('mortgageHousePrice', 'mortgageDeposit', 'mortgageYears', 'mortgageInterest'),
+  (housePrice, deposit, mortgageYears, interest) => {
+    const principal = housePrice - deposit
     const months = mortgageYears * 12
     if (interest === 0) {
       return principal / months
@@ -28,22 +28,6 @@ export const getMonthlyMortgagePayment = createSelector(
       const r = interest / 1200
       return principal * r * Math.pow(1 + r, months) / (Math.pow(1 + r, months) - 1)
     }
-  }
-)
-
-export const getOpportunityRentCost = createSelector(
-  createSelectors('years', 'rentAmount', 'rentDeposit', 'savingsInterest'),
-  (years, rent, rentDeposit, interest) => {
-    console.log("rentDeposit: ", rent, rentDeposit)
-    const initialCost = rent * rentDeposit / 100
-    let totalCost = initialCost
-    let totalOpportunityCost = 0
-    return Array(years * 12 + 1).fill(0).map(() => {
-      const opportunityCost = totalCost * interest / 12 / 100
-      totalCost += rent + opportunityCost
-      totalOpportunityCost += opportunityCost
-      return totalOpportunityCost
-    })
   }
 )
 
@@ -61,32 +45,30 @@ export const getMonthlyRentCost = createSelector(
 )
 
 export const getMonthlyBuyCosts = createSelector(
-  [getMonthlyMortgagePayment, ...createSelectors('years', 'mortgageAmount',
+  [getMonthlyMortgagePayment, ...createSelectors('years', 'mortgageHousePrice',
     'mortgageInterest',
-    'mortgageDeposit', 'savingsInterest', 'houseGrowth')],
-  (monthlyPayment, years, mortgageAmount, mortgageInterest, deposit, savingsInterest, houseGrowth) => {
-    let principal = mortgageAmount
-    const initialCost = 10000
-    let nonInvestibleAssets = 10000 + deposit
+    'mortgageDeposit', 'savingsInterest', 'houseGrowth', 'buyMaintenanceCosts', 'buyInitialCosts')],
+  (monthlyPayment, years, initialHousePrice, mortgageInterest, deposit, savingsInterest, houseGrowth, buyMaintenanceCosts, buyInitialCosts) => {
+    let principal = initialHousePrice - deposit
+    let nonInvestibleAssets = buyInitialCosts + deposit
     let totalOpportunityCosts = 0
     let totalInterestCosts = 0
     let totalMaintenanceCosts = 0
-    let maintenanceCost = 200
-    const initialHousePrice = mortgageAmount + deposit
     let housePrice = initialHousePrice
     return Array(years * 12 + 1).fill(0).map((_, month) => {
       const interestCost = Math.max(0, mortgageInterest / 100 / 12 * principal)
+      const mortgageCost = principal > 0 ? monthlyPayment : 0
       const opportunityCost = nonInvestibleAssets * savingsInterest / 12 / 100
       const houseCost = initialHousePrice - housePrice
-      nonInvestibleAssets += monthlyPayment + maintenanceCost + opportunityCost
-      principal -= (monthlyPayment - interestCost)
-      totalMaintenanceCosts += maintenanceCost
+      nonInvestibleAssets += buyMaintenanceCosts / 12 + opportunityCost + mortgageCost //+  //
+      principal -= (mortgageCost - interestCost)
+      totalMaintenanceCosts += buyMaintenanceCosts / 12
       totalInterestCosts += interestCost
       totalOpportunityCosts += opportunityCost
       housePrice = housePrice + housePrice * houseGrowth / 12 / 100
       return {
-        total: initialCost + totalOpportunityCosts + totalMaintenanceCosts + totalInterestCosts + houseCost,
-        initialCost: initialCost,
+        total: buyInitialCosts + totalOpportunityCosts + totalMaintenanceCosts + totalInterestCosts + houseCost,
+        initialCost: buyInitialCosts,
         opportunityCost: totalOpportunityCosts,
         maintenanceCost: totalMaintenanceCosts,
         interestCost: totalInterestCosts,

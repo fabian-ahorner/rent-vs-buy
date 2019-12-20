@@ -1,4 +1,5 @@
 import React from 'react'
+import { makeStyles } from '@material-ui/core';
 import ConnectedTextField from './ConnectedTextField';
 import ValueCollection from './ValueCollection';
 
@@ -6,18 +7,16 @@ export default function MarketValues({ values }) {
   return (
     <ValueCollection>
       <ConnectedTextField
-        valueKey="savingsInterest"
-        label="Savings interest"
-        type='percent'
-        step={0.01}
-        max={10}
+        valueKey="rentAmount"
+        label="Rent / Month"
+        step={10}
+        type='money'
       />
       <ConnectedTextField
-        label="House growth"
-        valueKey={'houseGrowth'}
+        label="Rent deposit"
+        valueKey={'rentDeposit'}
+        step={5}
         type='percent'
-        step={0.01}
-        max={10}
       />
     </ValueCollection>
   )

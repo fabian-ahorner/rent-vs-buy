@@ -1,27 +1,16 @@
 import React from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles'
-import { useFormatter } from '../components/Money';
-import {
-  getMonthlyBuyCost,
-  getMonthlyBuyCosts,
-  getMonthlyRentCost
-} from '../state/values/selectors';
+import { useFormatter } from '../../components/Money';
+import { getMonthlyBuyCosts, } from '../../state/values/selectors';
 import { useSelector } from 'react-redux';
-import { Area, AreaChart, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
 
-export default function Charts() {
+export default function Summary() {
   const classes = useStyles()
   const theme = useTheme()
 
-  const monthlyRentCost = useSelector(getMonthlyRentCost)
-  const monthlyBuyCost = useSelector(getMonthlyBuyCost)
   const monthlyBuyCosts = useSelector(getMonthlyBuyCosts)
 
-  const data = monthlyRentCost.map((cost, i) => ({
-    rent: cost,
-    buy: monthlyBuyCost[i],
-    month: i
-  }))
   const moneyFormatter = useFormatter()
   const costFormatter = (item) => {
     return moneyFormatter(item)
@@ -31,36 +20,6 @@ export default function Charts() {
   return (
 
     <div className={classes.chartContainer}>
-      {/*<LineChart width={600}*/}
-                 {/*height={300}*/}
-                 {/*data={data}*/}
-                 {/*margin={{ top: 5, right: 20, bottom: 5, left: 20 }}>*/}
-        {/*<Line*/}
-          {/*dot={false}*/}
-          {/*name="Rent"*/}
-          {/*dataKey="rent"*/}
-          {/*tickFormatter={costFormatter}*/}
-          {/*stroke={theme.palette.rent.main}/>*/}
-        {/*<Line*/}
-          {/*dot={false}*/}
-          {/*name="Buy"*/}
-          {/*dataKey="buy"*/}
-          {/*tickFormatter={costFormatter}*/}
-          {/*stroke={theme.palette.buy.main}/>*/}
-        {/*<CartesianGrid*/}
-          {/*stroke="#ccc"*/}
-          {/*strokeDasharray="5 5"/>*/}
-        {/*<XAxis*/}
-          {/*stroke="white"*/}
-          {/*dataKey="month"*/}
-          {/*tickFormatter={yearFormatter}*/}
-          {/*tickSize={5}/>*/}
-        {/*<YAxis*/}
-          {/*stroke="white"*/}
-          {/*tickFormatter={costFormatter}/>*/}
-        {/*<Tooltip formatter={costFormatter}/>*/}
-      {/*</LineChart>*/}
-
       <AreaChart
         width={600}
         height={300}
@@ -106,19 +65,22 @@ export default function Charts() {
           name="Opportunity cost"
           dataKey="opportunityCost"
           tickFormatter={costFormatter}
-          stroke={theme.palette.buy.main}/>
+          stroke={theme.palette.buy.main}
+          fill={theme.palette.buy.main}/>
         <CartesianGrid
-          stroke="#ccc"
+          stroke={theme.palette.text.hint}
           strokeDasharray="5 5"/>
         <XAxis
-          stroke="white"
+          stroke={theme.palette.text.hint}
           dataKey="month"
           tickFormatter={yearFormatter}
           tickSize={5}/>
         <YAxis
-          stroke="white"
+          stroke={theme.palette.text.hint}
           tickFormatter={costFormatter}/>
-        <Tooltip formatter={costFormatter}/>
+        <Tooltip
+          tickFormatter={yearFormatter}
+          formatter={costFormatter}/>
       </AreaChart>
     </div>
   );

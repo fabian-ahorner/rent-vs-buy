@@ -1,4 +1,4 @@
-function format(value, currency){
+function format(value, currency) {
   const formatter = new Intl.NumberFormat('en-GB', {
     style: 'currency',
     currency: currency || 'GBP',
@@ -8,11 +8,11 @@ function format(value, currency){
   return formatter.format(value)
 }
 
-export function useFormatter(){
+export function useFormatter() {
   const currency = 'GBP'
   return value => format(value, currency)
 }
 
-export default function Money({value, children, currency}){
-  return format(value||children, currency)
+export default function Money({ value, children, currency }) {
+  return format(value || children || 0, currency)
 }

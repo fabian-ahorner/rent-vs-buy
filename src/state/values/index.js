@@ -11,7 +11,10 @@ const slice = createSlice({
     mortgageDeposit: 30000,
     houseGrowth: 1.0,
     savingsInterest: 1.0,
-    years: 30
+    years: 30,
+    mortgageHousePrice: 300000,
+    buyMaintenanceCosts: 2000,
+    buyInitialCosts: 10000,
   },
   reducers: {
     setValue: (state, { payload }) => ({ ...state, [payload.valueKey]: payload.value }),

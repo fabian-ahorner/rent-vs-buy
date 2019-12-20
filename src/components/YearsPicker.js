@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles'
 import { getYears } from '../state/values/selectors';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,18 +8,21 @@ import ButtonGroup from '@material-ui/core/ButtonGroup/ButtonGroup';
 import { setValue } from '../state/values';
 
 const YEARS_OPTIONS = [10, 30, 50]
-export default function YearsPicker() {
-
+export default function YearsPicker({className}) {
   const selectedYears = useSelector(getYears)
   const dispatch = useDispatch()
+  const classes = useStyles()
 
   return (
-    <ButtonGroup color="primary">
+    <ButtonGroup
+      className={clsx(classes.root, className)}
+      color="primary">
       {YEARS_OPTIONS.map(years => (
         <Button
+          key={years}
           onClick={() => dispatch(setValue({ valueKey: 'years', value: years }))}
           variant={years === selectedYears && 'contained'}>
-          {years} years {selectedYears}
+          {years} years
         </Button>
       ))}
     </ButtonGroup>
@@ -27,10 +31,6 @@ export default function YearsPicker() {
 
 
 const useStyles = makeStyles(theme => ({
-  chartContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    padding: theme.spacing(2, 4)
+  root: {
   }
 }))

@@ -1,59 +1,69 @@
 import React from 'react';
-import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import './App.css';
 import Theme from './Theme';
-import BaseValues from './components/BaseValues';
+import MortgageValues from './components/MortgageValues';
 import MarketValues from './components/MarketValues';
-import Typography from '@material-ui/core/Typography';
-import Money, { useFormatter } from './components/Money';
-import {
-  getMonthlyBuyCost,
-  getMonthlyBuyCosts,
-  getMonthlyMortgagePayment,
-  getMonthlyRentCost
-} from './state/values/selectors';
-import { useSelector } from 'react-redux';
-import Charts from './components/Charts';
+import Charts from './components/Charts/Charts';
 import YearsPicker from './components/YearsPicker';
 import Header from './components/Header';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Paper from '@material-ui/core/Paper';
+import RentValues from './components/RentValues';
+import BillsValues from './components/BillsValues';
 
 export default function App() {
   const classes = useStyles()
-  const theme = useTheme()
 
-  const monthlyRentCost = useSelector(getMonthlyRentCost)
-  const monthlyBuyCost = useSelector(getMonthlyBuyCost)
-  const monthlyMortgagePayment = useSelector(getMonthlyMortgagePayment)
-  const monthlyBuyCosts = useSelector(getMonthlyBuyCosts)
+  const [selectedTab, setSelectedTab] = React.useState('mortgage')
+  const handleTabChange = React.useCallback((event, newValue) => {
+    setSelectedTab(newValue)
+  }, [])
 
-  const data = monthlyRentCost.map((cost, i) => ({
-    rent: cost,
-    buy: monthlyBuyCost[i],
-    month: i
-  }))
-  const moneyFormatter = useFormatter()
-  const costFormatter = (item) => {
-    return moneyFormatter(item)
-  }//`£${cost}`
+  const tabContent = React.useMemo(() => {
+    switch (selectedTab) {
+      case 'mortgage':
+        return <MortgageValues/>
+      case 'market':
+        return <MarketValues/>
+      case 'rent':
+        return <RentValues/>
+      case 'bills':
+        return <BillsValues/>
+    }
+  }, [selectedTab])
 
-  const yearFormatter = month => month / 12
   return (
     <div className="App">
       <Header/>
       <Theme dark>
         <header className={classes.header}>
           <Charts/>
-          <YearsPicker/>
+          <YearsPicker className={classes.yearPicker}/>
+          <Paper square>
+            <Tabs
+              value={selectedTab}
+              onChange={handleTabChange}
+              centered
+              aria-label="simple tabs example">
+              <Tab label="Mortgage" value="mortgage"/>
+              <Tab label="Fees / Bills" value="bills"/>
+              <Tab label="Rent" value="rent"/>
+              <Tab label="Market" value="market"/>
+            </Tabs>
+          </Paper>
         </header>
-        <MarketValues/>
       </Theme>
-      <BaseValues/>
+      <div className={classes.values}>
+        {tabContent}
+      </div>
 
-      <content className={classes.content}>
-        <Typography variant={'h2'}>
-          <Money value={monthlyMortgagePayment}/>
-        </Typography>
-      </content>
+      {/*<content className={classes.content}>*/}
+      {/*<Typography variant={'h2'}>*/}
+      {/*<Money value={monthlyMortgagePayment}/>*/}
+      {/*</Typography>*/}
+      {/*</content>*/}
     </div>
   );
 }
@@ -62,7 +72,10 @@ export default function App() {
 const useStyles = makeStyles(theme => ({
   header: {
     background: `linear-gradient(135deg, ${theme.palette.rent.main}, ${theme.palette.buy.main})`,
-    padding: theme.spacing(2, 4)
+    paddingTop: theme.spacing(2),
+    position: 'sticky',
+    top: 0,
+    zIndex: 10
   },
   content: {
     padding: theme.spacing(4, 6)
@@ -72,5 +85,11 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  values: {
+    background: theme.palette.background.default
+  },
+  yearPicker: {
+    marginBottom: theme.spacing(2)
   }
 }))

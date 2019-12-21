@@ -1,6 +1,5 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core';
-import ConnectedTextField from './ConnectedTextField';
 
 export default function ValueCollection({ children }) {
   const classes = useStyles()
@@ -18,9 +17,9 @@ const useStyles = makeStyles(theme => ({
     alignSelf: 'stretch',
     // alignItems: 'center',
     justifyContent: 'space-around',
-    padding: theme.spacing(4, 8),
+    padding: theme.spacing(4, 0),
     margin: '0 auto',
-    maxWidth: 512*2,
+    maxWidth: 512 + 128,
     flexDirection: 'column'
     // flexWrap: 'wrap'
   },

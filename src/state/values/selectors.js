@@ -30,17 +30,43 @@ export const getMonthlyMortgagePayment = createSelector(
     }
   }
 )
+export const getMonthlyBuyCost = createSelector(
+  [getMonthlyMortgagePayment, ...createSelectors('buyMaintenanceCosts')],
+  (mortgagePayment, maintenaceCosts) => mortgagePayment + maintenaceCosts / 12
+)
+export const getInitialBuyCost = createSelector(
+  createSelectors('mortgageDeposit', 'buyInitialCosts'),
+  (mortgageDeposit, buyInitialCosts) => mortgageDeposit + buyInitialCosts
+)
 
-export const getMonthlyRentCost = createSelector(
+export const getMonthlyRentCosts = createSelector(
   createSelectors('years', 'rentAmount', 'rentDeposit', 'savingsInterest'),
   (years, rent, rentDeposit, interest) => {
-    console.log("rentDeposit: ", rent, rentDeposit)
     const initialCost = rent * rentDeposit / 100
-    let totalCost = initialCost
-    return Array(years * 12 + 1).fill(0).map(() => {
-      totalCost += rent + totalCost * interest / 12 / 100
-      return totalCost
+    let nonInvestibleAssets = initialCost
+    let totalRentCost = 0
+    let totalOpportunityCosts = 0
+
+    return Array(years * 12 + 1).fill(0).map((_, month) => {
+      totalRentCost += rent
+      totalOpportunityCosts += nonInvestibleAssets * interest / 12 / 100
+      nonInvestibleAssets += rent
+
+      return {
+        total: totalRentCost + totalOpportunityCosts,
+        initialCost: initialCost,
+        opportunityCost: totalOpportunityCosts,
+        rentCost: totalRentCost,
+        month
+      }
     })
+  }
+)
+
+export const getTotalMonthlyRentCost = createSelector(
+  [getMonthlyRentCosts],
+  (costs) => {
+    return costs.map(c => c.total)
   }
 )
 
@@ -80,7 +106,7 @@ export const getMonthlyBuyCosts = createSelector(
 )
 
 
-export const getMonthlyBuyCost = createSelector(
+export const getTotalMonthlyBuyCost = createSelector(
   [getMonthlyBuyCosts],
   (costs) => {
     return costs.map(c => c.total)

@@ -76,8 +76,8 @@ function ConnectedTextField({ valueKey, setValue, type, value, ...rest }) {
     }
   }, [type])
   const min = rest.min || 0
-  const max = rest.max || (type === 'percent' ? 100 : Math.max(rest.step * 100 , value * 2))
-  const middle = max/2-min/2
+  const max = rest.max || (type === 'percent' ? 100 : Math.max(rest.step * 100, value * 2))
+  const middle = max / 2 - min / 2
   const marks = React.useMemo(() => [{
     value: min,
     label: format(min),
@@ -100,7 +100,7 @@ function ConnectedTextField({ valueKey, setValue, type, value, ...rest }) {
       onChange={handleChange}
       margin="normal"
       variant="outlined"
-      value={tempValue === undefined? value : tempValue}
+      value={tempValue === undefined ? value : tempValue}
       {...rest}
     />
     <StyledSlider
@@ -122,7 +122,10 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 4),
     // margin: '0 auto',
     maxWidth: 512 * 2,
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(1, 2),
+    }
   },
   input: {
     flexBasis: 128,
@@ -131,6 +134,11 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     marginTop: theme.spacing(4),
     marginLeft: theme.spacing(4),
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: theme.spacing(2),
+      marginRight: theme.spacing(2),
+    }
   }
 }))
 

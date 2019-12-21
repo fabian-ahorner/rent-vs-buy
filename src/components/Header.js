@@ -37,10 +37,10 @@ export default function ButtonAppBar() {
       <AppBar position="static">
         <Tabs aria-label="simple tabs example" value={location.pathname} centered>
           <Tab label="Summary" component={Link} to={'/'} value='/'/>
+          <Tab label="Rent vs Buy" component={Link} to={'/rent-vs-buy'} value={'/rent-vs-buy'}/>
           <Tab label="Buy costs" component={Link} to={'/buy-costs'} value='/buy-costs'/>
           <Tab label="Rent costs" component={Link} to={'/rent-costs'} value='/rent-costs'/>
-          <Tab label="Equity" component={Link} to={'/equity'} value={'/equity'}/>
-          <Tab label="Rent vs Buy" component={Link} to={'/rent-vs-buy'} value={'/rent-vs-buy'}/>
+          {/*<Tab label="Equity" component={Link} to={'/equity'} value={'/equity'}/>*/}
         </Tabs>
       </AppBar>
     </div>

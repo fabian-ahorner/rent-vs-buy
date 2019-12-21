@@ -2,7 +2,7 @@
   "name": "rent_vs_buy",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://www.mortgage-calc.info",
+  "homepage": "https://mortgage-calc.info",
   "dependencies": {
     "@material-ui/core": "^4.7.2",
     "@material-ui/icons": "^4.5.1",

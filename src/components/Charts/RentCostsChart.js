@@ -1,60 +1,68 @@
 import React from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { useFormatter } from '../../components/Money';
-import { getMonthlyBuyCost, getMonthlyRentCost } from '../../state/values/selectors';
+import { getMonthlyRentCosts } from '../../state/values/selectors';
 import { useSelector } from 'react-redux';
-import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
 
 export default function RentCostChart() {
   const classes = useStyles()
   const theme = useTheme()
 
-  const monthlyRentCost = useSelector(getMonthlyRentCost)
-  const monthlyBuyCost = useSelector(getMonthlyBuyCost)
+  const monthlyRentCosts = useSelector(getMonthlyRentCosts)
 
-  const data = monthlyRentCost.map((cost, i) => ({
-    rent: cost,
-    buy: monthlyBuyCost[i],
-    month: i
-  }))
   const moneyFormatter = useFormatter()
   const costFormatter = (item) => {
     return moneyFormatter(item)
   }
-
   const yearFormatter = month => month / 12
   return (
 
     <div className={classes.chartContainer}>
-      <LineChart width={600}
+      <AreaChart width={600}
                  height={300}
-                 data={data}
+                 data={monthlyRentCosts}
                  margin={{ top: 5, right: 20, bottom: 5, left: 20 }}>
-        <Line
+        <Area
+          stackId={1}
           dot={false}
-          name="Rent"
-          dataKey="rent"
+          name="Initial cost"
+          dataKey="initialCost"
           tickFormatter={costFormatter}
-          stroke={theme.palette.rent.main}/>
-        <Line
+          stroke="#8884d8"
+          fill="#8884d8"
+        />
+        <Area
+          stackId={1}
           dot={false}
-          name="Buy"
-          dataKey="buy"
+          stroke="#82ca9d"
+          fill="#82ca9d"
+          name="Rent cost"
+          dataKey="rentCost"
+          tickFormatter={costFormatter}/>
+        <Area
+          stackId={1}
+          dot={false}
+          name="Opportunity cost"
+          dataKey="opportunityCost"
           tickFormatter={costFormatter}
-          stroke={theme.palette.buy.main}/>
+          stroke={theme.palette.buy.main}
+          fill={theme.palette.buy.main}/>
         <CartesianGrid
-          stroke="#ccc"
+          stroke={theme.palette.text.hint}
           strokeDasharray="5 5"/>
         <XAxis
-          stroke="white"
+          stroke={theme.palette.text.hint}
           dataKey="month"
           tickFormatter={yearFormatter}
           tickSize={5}/>
         <YAxis
-          stroke="white"
+          stroke={theme.palette.text.hint}
           tickFormatter={costFormatter}/>
-        <Tooltip formatter={costFormatter}/>
-      </LineChart>
+        <Tooltip
+          tickFormatter={yearFormatter}
+          formatter={costFormatter}/>
+      </AreaChart>
     </div>
   );
 }

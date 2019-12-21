@@ -40,7 +40,6 @@ export default function App() {
       <Theme dark>
         <header className={classes.header}>
           <Charts/>
-          <YearsPicker className={classes.yearPicker}/>
           <Paper square>
             <Tabs
               value={selectedTab}
@@ -89,7 +88,4 @@ const useStyles = makeStyles(theme => ({
   values: {
     background: theme.palette.background.default
   },
-  yearPicker: {
-    marginBottom: theme.spacing(2)
-  }
 }))

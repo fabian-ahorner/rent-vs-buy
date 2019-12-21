@@ -1,7 +1,11 @@
 import React from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { useFormatter } from '../../components/Money';
-import { getMonthlyBuyCost, getMonthlyRentCost } from '../../state/values/selectors';
+import {
+  getMonthlyRentCost,
+  getTotalMonthlyBuyCost,
+  getTotalMonthlyRentCost
+} from '../../state/values/selectors';
 import { useSelector } from 'react-redux';
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 
@@ -9,8 +13,8 @@ export default function RentVsBuyChart() {
   const classes = useStyles()
   const theme = useTheme()
 
-  const monthlyRentCost = useSelector(getMonthlyRentCost)
-  const monthlyBuyCost = useSelector(getMonthlyBuyCost)
+  const monthlyRentCost = useSelector(getTotalMonthlyRentCost)
+  const monthlyBuyCost = useSelector(getTotalMonthlyBuyCost)
 
   const data = monthlyRentCost.map((cost, i) => ({
     rent: cost,

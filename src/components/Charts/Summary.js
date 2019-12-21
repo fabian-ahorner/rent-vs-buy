@@ -1,97 +1,76 @@
 import React from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles'
-import { useFormatter } from '../../components/Money';
-import { getMonthlyBuyCosts, } from '../../state/values/selectors';
+import Typography from '@material-ui/core/Typography'
+import {
+  getInitialBuyCost,
+  getMonthlyBuyCost,
+  getMonthlyMortgagePayment,
+} from '../../state/values/selectors';
 import { useSelector } from 'react-redux';
-import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
+import Money from '../Money';
 
 export default function Summary() {
   const classes = useStyles()
   const theme = useTheme()
 
-  const monthlyBuyCosts = useSelector(getMonthlyBuyCosts)
+  const monthlyMortgagePayment = useSelector(getMonthlyMortgagePayment)
+  const monthlyBuyCosts = useSelector(getMonthlyBuyCost)
+  const initialBuyCost = useSelector(getInitialBuyCost)
 
-  const moneyFormatter = useFormatter()
-  const costFormatter = (item) => {
-    return moneyFormatter(item)
-  }
-
-  const yearFormatter = month => month / 12
   return (
-
-    <div className={classes.chartContainer}>
-      <AreaChart
-        width={600}
-        height={300}
-        data={monthlyBuyCosts}
-        margin={{ top: 5, right: 20, bottom: 5, left: 20 }}>
-        <Area
-          stackId={1}
-          dot={false}
-          name="House cost"
-          dataKey="houseCost"
-          tickFormatter={costFormatter}
-          stroke="#8884d8"
-          fill="#8884d8"
-        />
-        <Area
-          stackId={1}
-          dot={false}
-          name="Initial cost"
-          dataKey="initialCost"
-          tickFormatter={costFormatter}
-          stroke="#8884d8"
-          fill="#8884d8"
-        />
-        <Area
-          stackId={1}
-          dot={false}
-          stroke="#82ca9d"
-          fill="#82ca9d"
-          name="Maintenance cost"
-          dataKey="maintenanceCost"
-          tickFormatter={costFormatter}/>
-        <Area
-          stroke="#ffc658"
-          fill="#ffc658"
-          stackId={1}
-          dot={false}
-          name="Interest cost"
-          dataKey="interestCost"
-          tickFormatter={costFormatter}/>
-        <Area
-          stackId={1}
-          dot={false}
-          name="Opportunity cost"
-          dataKey="opportunityCost"
-          tickFormatter={costFormatter}
-          stroke={theme.palette.buy.main}
-          fill={theme.palette.buy.main}/>
-        <CartesianGrid
-          stroke={theme.palette.text.hint}
-          strokeDasharray="5 5"/>
-        <XAxis
-          stroke={theme.palette.text.hint}
-          dataKey="month"
-          tickFormatter={yearFormatter}
-          tickSize={5}/>
-        <YAxis
-          stroke={theme.palette.text.hint}
-          tickFormatter={costFormatter}/>
-        <Tooltip
-          tickFormatter={yearFormatter}
-          formatter={costFormatter}/>
-      </AreaChart>
+    <div className={classes.root}>
+      <div className={classes.valueContainer}>
+        <Typography
+          variant="h3">
+          <Money value={initialBuyCost}/>
+        </Typography>
+        <Typography
+          className={classes.caption}
+          variant="caption">
+          Initial buy cost
+        </Typography>
+      </div>
+      <div className={classes.valueContainer}>
+        <Typography
+          variant="h3">
+          <Money value={monthlyMortgagePayment}/>
+        </Typography>
+        <Typography
+          className={classes.caption}
+          variant="caption">
+          Monthly mortgage payment
+        </Typography>
+      </div>
+      <div className={classes.valueContainer}>
+        <Typography
+          variant="h3">
+          <Money value={monthlyBuyCosts}/>
+        </Typography>
+        <Typography
+          className={classes.caption}
+          variant="caption">
+          Monthly costs
+        </Typography>
+      </div>
     </div>
   );
 }
 
 
 const useStyles = makeStyles(theme => ({
-  chartContainer: {
+  root: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-around',
-    padding: theme.spacing(2, 4)
+    flexWrap: 'wrap',
+    // padding: theme.spacing(2, 4)
+    padding: theme.spacing(2, 2)
+  },
+  valueContainer: {
+    color: theme.palette.text.primary,
+    padding: theme.spacing(1, 1)
+  },
+  caption: {
+    color: theme.palette.text.hint,
   }
 }))
